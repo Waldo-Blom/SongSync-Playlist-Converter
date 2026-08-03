@@ -39,7 +39,7 @@ export function Navbar() {
         <div className="flex items-center justify-between">
           {/* Logo/App Name */}
           <Link href="/" className="text-xl font-bold">
-            Sonsync Playlist Converter
+            SongSync Playlist Converter
           </Link>
 
           {/* Navigation Items */}

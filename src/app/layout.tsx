@@ -20,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className={cn("font-sans", inter.variable, "dark")}>
       <body>
         <Navbar />
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 ">
           {children}
         </main>
       </body>
