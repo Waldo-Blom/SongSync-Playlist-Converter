@@ -1,21 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import {
-  ChevronDown,
-  ArrowUpFromLine,
-  ArrowDownToLine,
-  ExternalLink,
-  Music,
-  Heart,
-} from 'lucide-react';
+import { Dropdown } from '@/components/Dropdown'; 
+import { ChevronDown, ArrowUpFromLine, ArrowDownToLine, Music} from 'lucide-react';
 
 const platforms = [
   { name: 'YouTube Music', key: 'youtube-music', icon: '/icons/youtube.svg', color: 'text-red-500' },
@@ -47,44 +34,42 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {/* Export dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="bg-[#00f3ff]/10 border border-[#00f3ff]/50 text-[#00f3ff] hover:bg-[#00f3ff]/20 hover:neon-glow-cyan h-12 px-8 text-base transition-all duration-300 inline-flex items-center justify-center rounded-md">
-                <ArrowUpFromLine className="mr-2 h-5 w-5" />
-                Export JSON
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="bg-[#111] border-white/10">
-                {platforms.map((p) => (
-                  <DropdownMenuItem key={p.key} asChild>
-                    <Link href={`/${p.key}/export`} className="flex items-center gap-2 text-gray-300 focus:text-white focus:bg-white/5 cursor-pointer">
-                      <img src={p.icon} alt={p.name} width={18} height={18} />
-                      <span className={p.color}>{p.name}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Dropdown
+              trigger={
+                <button className="bg-[#00f3ff]/10 border border-[#00f3ff]/50 text-[#00f3ff] hover:bg-[#00f3ff]/20 hover:neon-glow-cyan h-12 px-8 text-base transition-all duration-300 inline-flex items-center justify-center rounded-md">
+                  <ArrowUpFromLine className="mr-2 h-5 w-5" />
+                  Export JSON
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </button>
+              }
+              items={platforms.map((p) => ({
+                label: p.name,
+                href: `/${p.key}/export`,
+                icon: p.icon,
+                color: p.color,
+              }))}
+              contentClassName="bg-[#111] border-white/10"
+            />
 
             {/* Import dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="bg-[#ff00e5]/10 border border-[#ff00e5]/50 text-[#ff00e5] hover:bg-[#ff00e5]/20 hover:neon-glow-pink h-12 px-8 text-base transition-all duration-300 inline-flex items-center justify-center rounded-md">
-                <ArrowDownToLine className="mr-2 h-5 w-5" />
-                Import JSON
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="bg-[#111] border-white/10">
-                {platforms.map((p) => (
-                  <DropdownMenuItem key={p.key} asChild>
-                    <Link href={`/${p.key}/import`} className="flex items-center gap-2 text-gray-300 focus:text-white focus:bg-white/5 cursor-pointer">
-                      <img src={p.icon} alt={p.name} width={18} height={18} />
-                      <span className={p.color}>{p.name}</span>
-                    </Link>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Dropdown
+              trigger={
+                <button className="bg-[#ff00e5]/10 border border-[#ff00e5]/50 text-[#ff00e5] hover:bg-[#ff00e5]/20 hover:neon-glow-pink h-12 px-8 text-base transition-all duration-300 inline-flex items-center justify-center rounded-md">
+                  <ArrowDownToLine className="mr-2 h-5 w-5" />
+                  Import JSON
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </button>
+              }
+              items={platforms.map((p) => ({
+                label: p.name,
+                href: `/${p.key}/import`,
+                icon: p.icon,
+                color: p.color,
+              }))}
+              contentClassName="bg-[#111] border-white/10"
+            />
           </div>
 
           <div className="mt-16 flex flex-wrap justify-center gap-6">
@@ -95,8 +80,8 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-        </div>   
-      </section>  
+        </div>
+      </section>
 
       {/* HOW IT WORKS */}
       <section id="how-it-works" className="py-24 px-6 bg-[#0f0f0f] border-y border-white/10">

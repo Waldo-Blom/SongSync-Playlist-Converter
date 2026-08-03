@@ -4,32 +4,38 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Dropdown } from './Dropdown';
 
-interface NavItem {
-  label: string;
-  href?: string;
-  dropdownItems?: Array<{ label: string; href: string }>;
-}
+const platforms = [
+  { name: 'YouTube Music', key: 'youtube-music', icon: '/icons/youtube.svg', color: 'text-red-500' },
+  { name: 'Spotify', key: 'spotify', icon: '/icons/spotify.svg', color: 'text-green-500' },
+  { name: 'Tidal', key: 'tidal', icon: '/icons/tidal.svg', color: 'text-white' },
+];
 
 export function Navbar() {
   const pathname = usePathname();
 
-  const navItems: NavItem[] = [
+  const importItems = platforms.map((p) => ({
+    label: p.name,
+    href: `/${p.key}/import`,
+    icon: p.icon,
+    color: p.color,
+  }));
+
+  const exportItems = platforms.map((p) => ({
+    label: p.name,
+    href: `/${p.key}/export`,
+    icon: p.icon,
+    color: p.color,
+  }));
+
+  const navItems = [
     { label: 'Home', href: '/' },
     {
       label: 'Import',
-      dropdownItems: [
-        { label: 'Spotify', href: '/spotify/import' },
-        { label: 'YouTube Music', href: '/youtube-music/import' },
-        { label: 'Tidal', href: '/tidal/import' },
-      ],
+      dropdownItems: importItems,
     },
     {
       label: 'Export',
-      dropdownItems: [
-        { label: 'Spotify', href: '/spotify/export' },
-        { label: 'YouTube Music', href: '/youtube-music/export' },
-        { label: 'Tidal', href: '/tidal/export' },
-      ],
+      dropdownItems: exportItems,
     },
   ];
 
@@ -37,39 +43,23 @@ export function Navbar() {
     <nav className="border-b bg-background">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo/App Name */}
           <Link href="/" className="text-xl font-bold">
             SongSync Playlist Converter
           </Link>
 
-          {/* Navigation Items */}
           <div className="flex items-center gap-3 pr-30">
             {navItems.map((item, index) => {
               const isActive = pathname === item.href;
 
-              // Render Dropdown if item has dropdownItems
               if (item.dropdownItems) {
                 return (
-                  <Dropdown
-                    key={index}
-                    title={item.label}
-                    items={item.dropdownItems}
-                    isActive={isActive}
-                  />
+                  <Dropdown key={index} title={item.label} items={item.dropdownItems} isActive={isActive}/>
                 );
               }
 
-              // Render regular Link
               return (
-                <Link
-                  key={index}
-                  href={item.href || '#'}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-accent text-accent-foreground'
-                      : 'text-foreground hover:bg-accent hover:bg-opacity-10'
-                  }`}
-                >
+                <Link key={index} href={item.href || '#'} 
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive ? 'bg-accent text-accent-foreground': 'text-foreground hover:bg-accent hover:bg-opacity-10'}`}>
                   {item.label}
                 </Link>
               );

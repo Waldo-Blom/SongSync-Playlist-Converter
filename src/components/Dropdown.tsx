@@ -8,51 +8,51 @@ import Link from 'next/link';
 interface DropdownItem {
   label: string;
   href: string;
+  icon?: string;    
+  color?: string;   
 }
 
 interface DropdownProps {
-  title: string;
+  title?: string;
+  trigger?: React.ReactNode;
   items: DropdownItem[];
-  isActive?: boolean;
+  isActive?: boolean;               
+  triggerClassName?: string;         
+  contentClassName?: string;         
 }
 
-export function Dropdown({ title, items, isActive }: DropdownProps) {
+export function Dropdown({title,trigger,items,isActive,triggerClassName = '',contentClassName = ''}: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const defaultTriggerClass = `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+    isActive ? 'bg-accent text-accent-foreground' : 'text-foreground hover:bg-accent hover:bg-opacity-10'
+  }`;
 
   return (
     <div className="relative inline-block">
-      {/* Dropdown Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-          isActive
-            ? 'bg-accent text-accent-foreground'
-            : 'text-foreground hover:bg-accent hover:bg-opacity-10'
-        }`}
-      >
-        {title}
-      </button>
+      {/* Trigger */}
+      <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
+        {trigger ? (trigger) : (
+          <button className={`${defaultTriggerClass} ${triggerClassName}`}>
+            {title}
+          </button>
+        )}
+      </div>
 
-      {/* Modal Overlay - Click outside to close */}
+      {/* Overlay to close on outside click */}
       {isOpen && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsOpen(false)}
-        />
+        <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}/>
       )}
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute left-0 mt-0 w-48 bg-card border border-border rounded-md shadow-lg z-50">
+        <div className={`absolute left-0 mt-0 w-48 bg-[#111] border border-white/10 rounded-md shadow-lg z-50 ${contentClassName}`}>
           <div className="py-1">
             {items.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className="block px-4 py-2 text-sm text-card-foreground hover:bg-muted transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
+              <Link key={index} href={item.href} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors" 
+                onClick={() => setIsOpen(false)}>
+                {item.icon && (<img src={item.icon} alt={item.label} width={18} height={18} />)}
+                <span className={item.color}>{item.label}</span>
               </Link>
             ))}
           </div>
