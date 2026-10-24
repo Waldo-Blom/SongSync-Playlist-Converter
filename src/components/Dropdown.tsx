@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // How to make a dropmenu: https://medium.com/designly/easy-dropdown-menus-with-next-js-and-tailwind-css-6ff4989ada5b
 
@@ -51,7 +52,7 @@ export function Dropdown({title,trigger,items,isActive,triggerClassName = '',con
             {items.map((item, index) => (
               <Link key={index} href={item.href} className="flex items-center gap-2 px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors" 
                 onClick={() => setIsOpen(false)}>
-                {item.icon && (<img src={item.icon} alt={item.label} width={18} height={18} />)}
+                {item.icon && (<Image src={item.icon} alt={item.label} width={18} height={18} />)}
                 <span className={item.color}>{item.label}</span>
               </Link>
             ))}

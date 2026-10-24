@@ -1,37 +1,62 @@
 //! app/api/spotify/auth/route.ts
 
-//* This is used to redirect the user to authenticate their developer platform
+//* Redirects the user to Spotify to authorize this app.
+//* Triggered by the "Connect Spotify" button: /api/spotify/auth?returnTo=/spotify/import
 //* https://developer.spotify.com/documentation/web-api/tutorials/code-flow
 
-import { NextResponse } from 'next/server';
-import dotenv from 'dotenv';
-dotenv.config();
+import { NextRequest, NextResponse } from 'next/server';
+import { randomBytes } from 'crypto';
+import { COOKIES, baseCookieOptions, safeReturnTo } from '@/lib/spotify-session';
 
-const clientId = process.env.SPOTIFY_CLIENT_ID;
-const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
+const SCOPES = [
+  'user-read-private',
+  'user-read-email',
+  'playlist-read-private',
+  'playlist-read-collaborative',
+  'playlist-modify-private',
+  'playlist-modify-public',
+].join(' ');
 
+export async function GET(request: NextRequest) {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
 
-//http://127.0.0.1:3000/api/spotify/auth
-export async function GET() {
   if (!clientId || !redirectUri) {
-    throw new Error('SPOTIFY_CLIENT_ID is not defined');
+    return NextResponse.json(
+      { error: 'SPOTIFY_CLIENT_ID or SPOTIFY_REDIRECT_URI is not defined' },
+      { status: 500 }
+    );
   }
 
-  // Define the scope (adjust as needed)
-  const scope = 'user-read-private user-read-email';
+  // Cookies are per-hostname, so always start the flow on the same host as the redirect URI
+  const redirectUrl = new URL(redirectUri);
+  const requestHost = request.headers.get('host');
+  if (requestHost && requestHost !== redirectUrl.host) {
+    return NextResponse.redirect(
+      new URL(request.nextUrl.pathname + request.nextUrl.search, redirectUrl.origin)
+    );
+  }
 
-console.log('CLIENT ID:', clientId);
-console.log('REDIRECT URI:', JSON.stringify(redirectUri));
+  const returnTo = safeReturnTo(request.nextUrl.searchParams.get('returnTo'));
 
-  // Build the query parameters using URLSearchParams
+  // Random value to protect against CSRF; verified in the callback.
+  const state = randomBytes(16).toString('hex');
+
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: clientId,
-    scope,
-    redirect_uri: redirectUri
+    scope: SCOPES,
+    redirect_uri: redirectUri,
+    state,
   });
 
-  // Redirect to Spotify's authorization endpoint
-  const spotifyAuthUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
-  return NextResponse.redirect(spotifyAuthUrl);
+  const response = NextResponse.redirect(
+    `https://accounts.spotify.com/authorize?${params.toString()}`
+  );
+
+  const tenMinutes = 60 * 10;
+  response.cookies.set(COOKIES.state, state, { ...baseCookieOptions, maxAge: tenMinutes });
+  response.cookies.set(COOKIES.returnTo, returnTo, { ...baseCookieOptions, maxAge: tenMinutes });
+
+  return response;
 }

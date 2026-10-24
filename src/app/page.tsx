@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Dropdown } from '@/components/Dropdown'; 
 import { ChevronDown, ArrowUpFromLine, ArrowDownToLine, Music} from 'lucide-react';
 
@@ -75,7 +76,7 @@ export default function HomePage() {
           <div className="mt-16 flex flex-wrap justify-center gap-6">
             {platforms.map((p) => (
               <div key={p.key} className="flex items-center gap-2 bg-[#111] border border-white/10 rounded-lg px-4 py-2">
-                <img src={p.icon} alt={p.name} width={24} height={24} />
+                <Image src={p.icon} alt={p.name} width={24} height={24} />
                 <span className={p.color}>{p.name}</span>
               </div>
             ))}
@@ -159,7 +160,7 @@ export default function HomePage() {
             {/* YouTube Music */}
             <div className="bg-[#111] border border-red-500/30 rounded-xl p-6 hover:border-red-500/60 transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <img src="/icons/youtube.svg" alt="YouTube Music" width={32} height={32} />
+                <Image src="/icons/youtube.svg" alt="YouTube Music" width={32} height={32} />
                 <h3 className="text-xl font-semibold text-red-500">YouTube Music</h3>
               </div>
               <ul className="space-y-3 text-gray-300 text-sm">
@@ -188,7 +189,7 @@ export default function HomePage() {
             {/* Spotify */}
             <div className="bg-[#111] border border-green-500/30 rounded-xl p-6 hover:border-green-500/60 transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <img src="/icons/spotify.svg" alt="Spotify" width={32} height={32} />
+                <Image src="/icons/spotify.svg" alt="Spotify" width={32} height={32} />
                 <h3 className="text-xl font-semibold text-green-500">Spotify</h3>
               </div>
               <ul className="space-y-3 text-gray-300 text-sm">
@@ -217,7 +218,7 @@ export default function HomePage() {
             {/* Tidal */}
             <div className="bg-[#111] border border-white/20 rounded-xl p-6 hover:border-white/50 transition-all">
               <div className="flex items-center gap-3 mb-4">
-                <img src="/icons/tidal.svg" alt="Tidal" width={32} height={32} />
+                <Image src="/icons/tidal.svg" alt="Tidal" width={32} height={32} />
                 <h3 className="text-xl font-semibold text-white">Tidal</h3>
               </div>
               <ul className="space-y-3 text-gray-300 text-sm">

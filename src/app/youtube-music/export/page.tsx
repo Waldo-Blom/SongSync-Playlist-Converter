@@ -1,8 +1,5 @@
-export default function YouTubeMusicExportPage() {
-  return (
-    <div>
-      <h1>YouTube Music Export</h1>
-      <p>Export your playlist to YouTube Music</p>
-    </div>
-  );
+import { YouTubeMusicExportPage } from '@/youtube-music/export';
+
+export default function Page() {
+  return <YouTubeMusicExportPage />;
 }
